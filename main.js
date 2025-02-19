@@ -1,16 +1,18 @@
-const {createApp} = Vue;
+const {createApp, ref} = Vue;
 const Dexie = window.Dexie,
     db = new Dexie('db_academico');
 
-createApp({
+const app = createApp({
     components: {
         alumno,
         materia,
+        buscarAlumno
     },
     data() {
         return {
             forms : {
                 alumno: {mostrar: false},
+                buscarAlumno: {mostrar: false},
                 materia: {mostrar: false},
                 matricula: {mostrar: false},
             },
@@ -27,4 +29,5 @@ createApp({
             materias: '++idMateria, codigo, nombre, uv',
         });
     }
-}).mount('#app');
+});
+app.mount('#app');
