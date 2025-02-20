@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" ref="app">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid">
@@ -45,8 +45,8 @@
             </nav>
         </div>
         <div class="container-fluid" id="appSistema">
-            <alumno v-show="forms.alumno.mostrar"></alumno>
-            <buscarAlumno v-show="forms.buscarAlumno.mostrar"></buscarAlumno>
+            <alumno v-show="forms.alumno.mostrar" @mostrar-buscar-alumno="forms.buscarAlumno.mostrar = !forms.buscarAlumno.mostrar"></alumno>
+            <buscaralumno v-show="forms.buscarAlumno.mostrar"></buscaralumno>
             <materia v-show="forms.materia.mostrar"></materia>
         </div>
     </div>

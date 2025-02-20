@@ -12,6 +12,9 @@
         }
     },
     methods: {
+        buscarAlumno() {
+            forms.buscarAlumno.mostrar = !forms.buscarAlumno.mostrar;
+        },
         modificarAlumno(alumno) {
             this.accion = 'modificar';
             this.idAlumno = alumno.idAlumno;
@@ -34,11 +37,9 @@
             }
             db.alumnos.put(alumno);
             this.nuevoAlumno();
-            this.listarAlumnos();
         },
         buscarAlumno() {
-            app._component.data().forms.buscarAlumno.mostrar != 
-                app._component.data().forms.buscarAlumno.mostrar;
+            this.$emit('mostrar-buscar-alumno');
         },
         nuevoAlumno() {
             this.accion = 'nuevo';

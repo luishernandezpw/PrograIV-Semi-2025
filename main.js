@@ -6,7 +6,7 @@ const app = createApp({
     components: {
         alumno,
         materia,
-        buscarAlumno
+        buscaralumno
     },
     data() {
         return {
