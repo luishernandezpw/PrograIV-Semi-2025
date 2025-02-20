@@ -8,6 +8,9 @@
         }
     },
     methods: {
+        modificarAlumno(alumno){
+            this.$emit('modificar', alumno);
+        },
         eliminarAlumno(alumno) {
             alertify.confirm('Eliminar Alumno', `¿Esta seguro de eliminar el alumno ${alumno.nombre}?`, () => {
                 db.alumnos.delete(alumno.idAlumno);

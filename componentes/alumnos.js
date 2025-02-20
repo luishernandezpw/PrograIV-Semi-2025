@@ -1,5 +1,6 @@
     
  const alumno = {
+    props: ['forms'],
     data() {
         return {
             accion: 'nuevo',
@@ -13,7 +14,8 @@
     },
     methods: {
         buscarAlumno() {
-            forms.buscarAlumno.mostrar = !forms.buscarAlumno.mostrar;
+            this.forms.buscarAlumno.mostrar = !this.forms.buscarAlumno.mostrar;
+            this.$emit('buscar');
         },
         modificarAlumno(alumno) {
             this.accion = 'modificar';
@@ -37,9 +39,6 @@
             }
             db.alumnos.put(alumno);
             this.nuevoAlumno();
-        },
-        buscarAlumno() {
-            this.$emit('mostrar-buscar-alumno');
         },
         nuevoAlumno() {
             this.accion = 'nuevo';

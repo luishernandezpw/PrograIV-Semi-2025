@@ -6,7 +6,8 @@ const app = createApp({
     components: {
         alumno,
         materia,
-        buscaralumno
+        buscaralumno,
+        buscarmateria
     },
     data() {
         return {
@@ -14,13 +15,20 @@ const app = createApp({
                 alumno: {mostrar: false},
                 buscarAlumno: {mostrar: false},
                 materia: {mostrar: false},
+                buscarMateria: {mostrar: false},
                 matricula: {mostrar: false},
             },
         };
     },
     methods: {
+        buscar(form, metodo) {
+            this.$refs[form][metodo]();
+        },
         abrirFormulario(componente) {
             this.forms[componente].mostrar = !this.forms[componente].mostrar;
+        },
+        modificar(form, metodo, datos) {
+            this.$refs[form][metodo](datos);
         }
     },
     created() {

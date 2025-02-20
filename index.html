@@ -45,9 +45,10 @@
             </nav>
         </div>
         <div class="container-fluid" id="appSistema">
-            <alumno v-show="forms.alumno.mostrar" @mostrar-buscar-alumno="forms.buscarAlumno.mostrar = !forms.buscarAlumno.mostrar"></alumno>
-            <buscaralumno v-show="forms.buscarAlumno.mostrar"></buscaralumno>
-            <materia v-show="forms.materia.mostrar"></materia>
+            <alumno v-show="forms.alumno.mostrar" :forms="forms" ref="alumno" @buscar="buscar('buscaralumno', 'listarAlumnos')"></alumno>
+            <buscaralumno v-show="forms.buscarAlumno.mostrar" ref="buscaralumno" @modificar="modificar('alumno', 'modificarAlumno', $event)"></buscaralumno>
+            <materia v-show="forms.materia.mostrar" :forms="forms" ref="materia" @buscar="buscar('buscarmateria', 'listarMaterias')"></materia>
+            <buscarmateria v-show="forms.buscarMateria.mostrar" ref="buscarmateria" @modificar="modificar('materia', 'modificarMateria', $event)"></buscarmateria>
         </div>
     </div>
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
@@ -56,6 +57,7 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="componentes/busqueda_alumnos.js"></script>
     <script src="componentes/alumnos.js"></script>
+    <script src="componentes/busqueda_materias.js"></script>
     <script src="componentes/materias.js"></script>
     <script src="main.js"></script>
 </body>
