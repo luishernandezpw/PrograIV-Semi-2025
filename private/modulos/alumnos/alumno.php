@@ -7,7 +7,7 @@ $accion = $accion ?? '';
 $class_alumnos = new alumnos($conexion);
 
 class alumnos {
-    private $datos = [], $db, $respuesta=['msg'='ok'];
+    private $datos = [], $db, $respuesta=['msg'=>'ok'];
 
     public function __construct($conexion) {
         $this->db = $conexion;
