@@ -12,10 +12,16 @@
             this.$emit('modificar', alumno);
         },
         eliminarAlumno(alumno) {
-            alertify.confirm('Eliminar Alumno', `¿Esta seguro de eliminar el alumno ${alumno.nombre}?`, () => {
-                db.alumnos.delete(alumno.idAlumno);
-                this.listarAlumnos();
-                alertify.success(`Alumno ${alumno.nombre} eliminado`);
+            alertify.confirm('Eliminar Alumno', `¿Esta seguro de eliminar el alumno ${alumno.nombre}?`, async() => {
+                let respuesta = await fetch(`private/modulos/alumnos/alumno.php?accion=eliminar&alumnos=${JSON.stringify(alumno)}`),
+                    data = await respuesta.json();
+                if( data != true ){
+                    alertify.error(data);
+                }else{
+                    db.alumnos.delete(alumno.codigo_transaccion);
+                    this.listarAlumnos();
+                    alertify.success(`Alumno ${alumno.nombre} eliminado`);
+                }
             }, () => { });
         },
         async listarAlumnos() {
