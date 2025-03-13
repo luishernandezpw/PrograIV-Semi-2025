@@ -5,10 +5,12 @@
         return {
             accion: 'nuevo',
             materias: [],
-            idMateria: '',
-            codigo: '',
-            nombre: '',
-            uv: '',
+            materia : {
+                codigo: '',
+                nombre: '',
+                uv: '',
+                codigo_transaccion: uuidv4()
+            },
         }
     },
     methods: {
@@ -18,30 +20,31 @@
         },
         modificarMateria(materia) {
             this.accion = 'modificar';
-            this.idMateria = materia.idMateria;
-            this.codigo = materia.codigo;
-            this.nombre = materia.nombre;
-            this.uv = materia.uv;
+            this.materia = {...materia};
         },
         guardarMateria() {
-            let materia = {
-                codigo: this.codigo,
-                nombre: this.nombre,
-                uv: this.uv
-            };
-            if (this.accion == 'modificar') {
-                materia.idMateria = this.idMateria;
-            }
+            let materia = {...this.materia};
             db.materias.put(materia);
-            this.nuevoMateria();
-            this.listarMaterias();
+            fetch(`private/modulos/materias/materia.php?accion=${this.accion}&materias=${JSON.stringify(materia)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if( data != true ){
+                        alertify.error(data);
+                    }else{
+                        this.nuevoMateria();
+                        this.$emit('buscar');
+                    }
+                })
+                .catch(error => console.log(error));
         },
         nuevoMateria() {
             this.accion = 'nuevo';
-            this.idMateria = '';
-            this.codigo = '';
-            this.nombre = '';
-            this.uv = '';
+            this.materia = {
+                codigo: '',
+                nombre: '',
+                uv: '',
+                codigo_transaccion: uuidv4()
+            }
         }
     },
     template: `
@@ -54,19 +57,19 @@
                             <div class="row p-1">
                                 <div class="col-3 col-md-2">CODIGO</div>
                                 <div class="col-9 col-md-4">
-                                    <input required v-model="codigo" type="text" name="txtCodigoMateria" id="txtCodigoMateria" class="form-control">
+                                    <input required v-model="materia.codigo" type="text" name="txtCodigoMateria" id="txtCodigoMateria" class="form-control">
                                 </div>
                             </div>
                             <div class="row p-1">
                                 <div class="col-3 col-md-2">NOMBRE</div>
                                 <div class="col-9 col-md-6">
-                                    <input required pattern="[A-Za-zñÑáéíóú ]{3,150}" v-model="nombre" type="text" name="txtNombreMateria" id="txtNombreMateria" class="form-control">
+                                    <input required pattern="[A-Za-zñÑáéíóú ]{3,150}" v-model="materia.nombre" type="text" name="txtNombreMateria" id="txtNombreMateria" class="form-control">
                                 </div>
                             </div>
                             <div class="row p-1">
                                 <div class="col-3 col-md-2">UV</div>
                                 <div class="col-9 col-md-8">
-                                    <input required v-model="uv" type="text" name="txtUVMateria" id="txtUVMateria" class="form-control">
+                                    <input required v-model="materia.uv" type="text" name="txtUVMateria" id="txtUVMateria" class="form-control">
                                 </div>
                             </div>
                         </div>

@@ -12,22 +12,29 @@
             this.$emit('modificar', materia);
         },
         eliminarMateria(materia) {
-            alertify.confirm('Eliminar Materia', `¿Esta seguro de eliminar el materia ${materia.nombre}?`, () => {
-                db.materias.delete(materia.idMateria);
-                this.listarMaterias();
-                alertify.success(`Materia ${materia.nombre} eliminado`);
+            alertify.confirm('Eliminar Materia', `¿Esta seguro de eliminar el materia ${materia.nombre}?`, async() => {
+                let respuesta = await fetch(`private/modulos/materias/materia.php?accion=eliminar&materias=${JSON.stringify(materia)}`),
+                    data = await respuesta.json();
+                if( data != true ){
+                    alertify.error(data);
+                }else{
+                    db.materias.delete(materia.codigo_transaccion);
+                    this.listarMaterias();
+                    alertify.success(`Materia ${materia.nombre} eliminado`);
+                }
             }, () => { });
         },
         async listarMaterias() {
             this.materias = await db.materias.filter(materia => materia[this.buscarTipo].toLowerCase().includes(this.buscar.toLowerCase())).toArray();
+            if (this.materias.length<1) {
+                fetch('private/modulos/materias/materia.php?accion=consultar')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.materias = data;
+                        db.materias.bulkAdd(data);
+                    });
+            }
         },
-        nuevoMateria() {
-            this.accion = 'nuevo';
-            this.idMateria = '';
-            this.codigo = '';
-            this.nombre = '';
-            this.uv = '';
-        }
     },
     created() {
         this.listarMaterias();
@@ -58,7 +65,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="materia in materias" @click="modificarMateria(materia)" :key="materia.idMateria">
+                        <tr v-for="materia in materias" @click="modificarMateria(materia)" :key="materia.codigo_transaccion">
                             <td>{{ materia.codigo }}</td>
                             <td>{{ materia.nombre }}</td>
                             <td>{{ materia.uv }}</td>

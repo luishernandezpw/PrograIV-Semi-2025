@@ -28,9 +28,15 @@
             db.alumnos.put(alumno);
             fetch(`private/modulos/alumnos/alumno.php?accion=${this.accion}&alumnos=${JSON.stringify(alumno)}`)
                 .then(response => response.json())
-                .then(data => alertify.success(data.msg))
+                .then(data => {
+                    if( data != true ){
+                        alertify.error(data);
+                    }else{
+                        this.nuevoAlumno();
+                        this.$emit('buscar');
+                    }
+                })
                 .catch(error => console.log(error));
-            this.nuevoAlumno();
         },
         nuevoAlumno() {
             this.accion = 'nuevo';
