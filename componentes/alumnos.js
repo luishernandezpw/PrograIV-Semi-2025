@@ -4,6 +4,7 @@
     data() {
         return {
             accion: 'nuevo',
+            newHash: '',
             alumno : {
                 codigo: '',
                 nombre: '',
@@ -25,6 +26,13 @@
         },
         guardarAlumno() {
             let alumno = {...this.alumno};
+            alumno.hash = CryptoJS.SHA256(JSON.stringify({
+                codigo: alumno.codigo,
+                nombre: alumno.nombre,
+                direccion: alumno.direccion,
+                telefono: alumno.telefono,
+                email: alumno.email
+            })).toString();
             db.alumnos.put(alumno);
             fetch(`private/modulos/alumnos/alumno.php?accion=${this.accion}&alumnos=${JSON.stringify(alumno)}`)
                 .then(response => response.json())
@@ -49,6 +57,17 @@
                 codigo_transaccion: uuidv4()
             };
         }
+    },
+    mounted() {
+        this.$watch('alumno', (newValue, oldValue) => {
+            this.newHash = CryptoJS.SHA256(JSON.stringify({
+                codigo: newValue.codigo,
+                nombre: newValue.nombre,
+                direccion: newValue.direccion,
+                telefono: newValue.telefono,
+                email: newValue.email
+            })).toString();
+        }, { deep: true });
     },
     template: `
         <div class="row">
@@ -85,6 +104,13 @@
                                 <div class="col-3 col-md-2">EMAIL</div>
                                 <div class="col-9 col-md-6">
                                     <input v-model="alumno.email" type="text" name="txtEmailAlumno" id="txtEmailAlumno" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row p-1">
+                                <div class="col-3 col-md-2">HASH</div>
+                                <div class="col-9 col-md-6">
+                                    <span class="form-control" id="spnHashAlumno">{{ alumno.hash }}</span>
+                                    <span class="form-control" id="spnCurrentHashAlumno">{{ newHash }}</span>
                                 </div>
                             </div>
                         </div>
