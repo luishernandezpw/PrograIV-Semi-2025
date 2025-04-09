@@ -19,4 +19,7 @@ Route::get('/', function () {
 Route::get('/bienvenida', function () {
     return 'Bienvenidos a Programacion Computacional IV.';
 });
+Route::get('/usuario/{id}/{nombre}/{apellido}', function ($id, $nombre, $apellido) {
+    return 'User #: '.$id. ', Nombre: '.$nombre .' Apellido: '.$apellido;
+})->where('id', '[0-9]+');
 Route::resource('alumno', AlumnoController::class);
