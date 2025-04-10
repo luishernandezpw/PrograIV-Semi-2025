@@ -28,7 +28,8 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Alumno::create($request->all());
+        return response()->json(['msg'=>'ok'], 200);
     }
 
     /**
