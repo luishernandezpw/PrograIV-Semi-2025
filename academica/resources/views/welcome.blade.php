@@ -47,7 +47,8 @@
                 </div>
             </nav>
             <div class="container-fluid" id="appSistema">
-                <alumno v-show="forms.alumno.mostrar" :forms="forms" ref="alumno" @buscar="buscar('buscaralumno', 'listarAlumnos')"></alumno>
+                <alumno v-show="forms.alumno.mostrar" :forms="forms" ref="alumno" @buscar="buscar('buscar_alumno', 'listarAlumnos')"></alumno>
+                <buscar_alumno v-show="forms.buscarAlumno.mostrar" ref="buscar_alumno" @modificar="modificar('alumno', 'modificarAlumno', $event)"></buscar_alumno>
             </div>
         </div>
 

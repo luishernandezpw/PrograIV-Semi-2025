@@ -76,7 +76,8 @@
                 this.alumno = {...alumno};
             },
             guardarAlumno() {
-                let alumno = {...this.alumno};
+                let alumno = {...this.alumno},
+                    metodo="POST";
                 alumno.hash = CryptoJS.SHA256(JSON.stringify({
                     codigo: alumno.codigo,
                     nombre: alumno.nombre,
@@ -85,17 +86,19 @@
                     email: alumno.email
                 })).toString();
                 db.alumnos.put(alumno);
-
+                if( this.accion=='modificar' ){
+                    metodo = "PUT";
+                }
                 axios ({
-                    method: 'POST',
+                    method: metodo,
                     url: `alumno`,
                     data: alumno,
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 }).then(response => {
-                    if( response.msg != 'ok' ){
-                        alertify.error(response.msg);
+                    if( response.data.msg != 'ok' ){
+                        alertify.error(response.data.msg);
                     }else{
                         this.nuevoAlumno();
                         this.$emit('buscar');
