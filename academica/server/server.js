@@ -2,6 +2,14 @@ const express = require('express'),
     app = express(),
     port = 3000,
     {MongoClient, ObjectId} = require('mongodb'),
+    http = require('http').createServer(app),
+    io = require('socket.io')(http, {
+        allowEIO3: true,
+        cors: {
+            origin: "http://localhost:3000",
+            credential: true
+        }
+    }),
     url = 'mongodb://localhost:27017',
     client = new MongoClient(url),
     dbName = 'db_amigos';
