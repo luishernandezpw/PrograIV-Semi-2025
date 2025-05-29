@@ -84,14 +84,62 @@
             </div>
         </div>
     </form>
+    <div class="container fixed-bottom">
+        <div class="row">
+            <div class="col-4 align-self-end">
+                <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Chat con amigos...</div>
+                    <div class="card-body">
+                        <ul id="ulMensajesAmigos"></ul>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <input type="text" class="form-control" placeholder="Escribe un mensaje..." id="txtMensajeAmigos">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.14.0/build/alertify.min.js"></script>
-
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
+        var socket = io.connect("http://127.0.0.1:3000", {'forceNew': true, 'transports': ['websocket']});
+        socket.on('connection', function(){
+            console.log('Conectado al servidor de Socket.io');
+        });
+
+        txtMensajeAmigos.addEventListener('keyup',event=>{
+            event.preventDefault();
+
+            if(event.keyCode === 13 && txtMensajeAmigos.value.trim() !== ''){
+                socket.emit('mensajeAmigo', txtMensajeAmigos.value.trim());
+                txtMensajeAmigos.value = '';
+            }
+        });
+        socket.on('mensajeAmigo', function(mensaje){
+            let ulMensajesAmigos = document.querySelector('#ulMensajesAmigos');
+            ulMensajesAmigos.innerHTML += `<li class="list-group-item">${mensaje}</li>`;
+            ulMensajesAmigos.scrollTop = ulMensajesAmigos.scrollHeight;
+        });
+
         var method = 'POST';
         document.addEventListener('DOMContentLoaded', function(){
             listarAmigos();
+            historialMensajesAmigos();
         });
+        function historialMensajesAmigos(){
+            fetch('/api/historial_chat')
+            .then(res=>res.json())
+            .then(data=>{
+                let ulMensajesAmigos = document.querySelector('#ulMensajesAmigos');
+                ulMensajesAmigos.innerHTML = '';
+                data.forEach(item=>{
+                    ulMensajesAmigos.innerHTML += `<li class="list-group-item">${item.mensaje}</li>`;
+                });
+                ulMensajesAmigos.scrollTop = ulMensajesAmigos.scrollHeight;
+            });
+        }
         txtBuscarAmigos.addEventListener('keyup', listarAmigos);
         function listarAmigos(){
             fetch(`/api/amigos?buscar=${txtBuscarAmigos.value}`)
@@ -116,6 +164,7 @@
                 tblAmigos.innerHTML = filas;
             });
         }
+
         frmAmigos.addEventListener('submit', async event=>{
             event.preventDefault();
 
