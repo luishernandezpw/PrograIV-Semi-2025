@@ -87,9 +87,9 @@
     <div class="container fixed-bottom">
         <div class="row">
             <div class="col-4 align-self-end">
-                <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
+                <div class="card text-bg-dark mb-3" style="max-width: 25rem;">
                     <div class="card-header">Chat con amigos...</div>
-                    <div class="card-body">
+                    <div class="card-body" style="height: 15rem; overflow-y: auto;">
                         <ul id="ulMensajesAmigos"></ul>
                     </div>
                     <div class="card-footer text-muted">
@@ -138,10 +138,20 @@
                 txtMensajeAmigos.value = '';
             }
         });
-        socket.on('mensajeAmigo', function(mensaje){
+        function crearMensaje(mensaje){
+            return `
+                <li class="list-group-item p-2">
+                    <span class="badge p-2 text-bg-secondary text-wrap fs-6 fst-normal text-start">${mensaje}</span>
+                </li>
+            `;
+        }
+        function mostrarMensaje(mensaje){
             let ulMensajesAmigos = document.querySelector('#ulMensajesAmigos');
-            ulMensajesAmigos.innerHTML += `<li class="list-group-item">${mensaje}</li>`;
+            ulMensajesAmigos.innerHTML += crearMensaje(mensaje);
             ulMensajesAmigos.scrollTop = ulMensajesAmigos.scrollHeight;
+        }
+        socket.on('mensajeAmigo', function(mensaje){
+            mostrarMensaje(mensaje);
             crearNotificacion(mensaje);
         });
 
@@ -158,7 +168,7 @@
                 let ulMensajesAmigos = document.querySelector('#ulMensajesAmigos');
                 ulMensajesAmigos.innerHTML = '';
                 data.forEach(item=>{
-                    ulMensajesAmigos.innerHTML += `<li class="list-group-item">${item.mensaje}</li>`;
+                    ulMensajesAmigos.innerHTML += crearMensaje(item.mensaje);
                 });
                 ulMensajesAmigos.scrollTop = ulMensajesAmigos.scrollHeight;
             });
